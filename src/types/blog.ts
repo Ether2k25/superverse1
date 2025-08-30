@@ -1,7 +1,7 @@
 export interface BlogPostSEO {
-  metaTitle: string;
-  metaDescription: string;
-  keywords: string[];
+  metaTitle?: string;
+  metaDescription?: string;
+  keywords?: string[];
   ogImage?: string | null;
 }
 
