@@ -175,10 +175,10 @@ export async function getBlogPostById(id: string): Promise<BlogPost | null> {
 export async function createBlogPost(postData: Partial<BlogPostBase>): Promise<BlogPost> {
   const now = new Date().toISOString();
   const defaultSEO = {
-    title: postData.title || 'New Blog Post',
-    description: postData.excerpt || '',
-    keywords: Array.isArray(postData.tags) ? postData.tags.join(', ') : '',
-    ogImage: postData.featuredImage || ''
+    metaTitle: postData.title || 'New Blog Post',
+    metaDescription: postData.excerpt || '',
+    keywords: Array.isArray(postData.tags) ? postData.tags : [],
+    ogImage: postData.featuredImage || null
   };
 
   const newPost: BlogPost = {
