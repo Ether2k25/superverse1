@@ -12,6 +12,7 @@
     "deploy": "npm run build && npm run setup && npm start"
   },
   "dependencies": {
+    "@vercel/kv": "^1.0.1",
     "bcryptjs": "^2.4.3",
     "framer-motion": "^10.16.4",
     "jsonwebtoken": "^9.0.2",
