@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create lead from newsletter subscription
+    // Save to MongoDB
     await createLead({
       name: 'Newsletter Subscriber',
       email,
@@ -30,12 +30,20 @@ export async function POST(request: NextRequest) {
       source: 'newsletter',
     });
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
-      message: 'Successfully subscribed to newsletter!'
+      message: 'Successfully subscribed to newsletter!',
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error processing newsletter subscription:', error);
+    
+    if (error.message.includes("already exists")) {
+      return NextResponse.json(
+        { error: 'Email already subscribed' },
+        { status: 409 }
+      );
+    }
+
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
