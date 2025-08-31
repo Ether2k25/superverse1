@@ -19,7 +19,7 @@ export interface Lead {
 // Create new lead
 export async function createLead(leadData: Omit<Lead, "id" | "createdAt" | "expiresAt" | "_id">): Promise<Lead> {
   const client = await clientPromise;
-  const db = client.db("myDatabase"); // change to your DB name
+  const db = client.db("Superversecluster1"); // change to your DB name
   const leads = db.collection<Lead>("leads");
 
   // Check duplicate email
@@ -44,7 +44,7 @@ export async function createLead(leadData: Omit<Lead, "id" | "createdAt" | "expi
 // Get all leads
 export async function getAllLeads(): Promise<Lead[]> {
   const client = await clientPromise;
-  const db = client.db("myDatabase");
+  const db = client.db("Superversecluster1");
   const leads = db.collection<Lead>("leads");
 
   const data = await leads.find().toArray();
@@ -54,7 +54,7 @@ export async function getAllLeads(): Promise<Lead[]> {
 // Get leads by source
 export async function getLeadsBySource(source: Lead["source"]): Promise<Lead[]> {
   const client = await clientPromise;
-  const db = client.db("myDatabase");
+  const db = client.db("Superversecluster1");
   const leads = db.collection<Lead>("leads");
 
   const data = await leads.find({ source }).toArray();
@@ -64,7 +64,7 @@ export async function getLeadsBySource(source: Lead["source"]): Promise<Lead[]> 
 // Get leads by post
 export async function getLeadsByPost(postId: string): Promise<Lead[]> {
   const client = await clientPromise;
-  const db = client.db("myDatabase");
+  const db = client.db("Superversecluster1");
   const leads = db.collection<Lead>("leads");
 
   const data = await leads.find({ postId }).toArray();
@@ -74,7 +74,7 @@ export async function getLeadsByPost(postId: string): Promise<Lead[]> {
 // Delete lead
 export async function deleteLead(id: string): Promise<boolean> {
   const client = await clientPromise;
-  const db = client.db("myDatabase");
+  const db = client.db("Superversecluster1");
   const leads = db.collection<Lead>("leads");
 
   const res = await leads.deleteOne({ _id: new ObjectId(id) });
