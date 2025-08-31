@@ -1,8 +1,10 @@
 // lib/leads-storage.ts
 import clientPromise from "./mongodb";
+import { ObjectId } from "mongodb";
 
 export interface Lead {
-  id?: string;
+  _id?: ObjectId; // Mongo will store this
+  id?: string; // convenience field for frontend
   name: string;
   email: string;
   phone?: string;
@@ -15,17 +17,9 @@ export interface Lead {
 }
 
 // Create new lead
-export async function createLead(leadData: {
-  name: string;
-  email: string;
-  phone?: string;
-  source: "comment" | "newsletter" | "contact";
-  postId?: string;
-  postTitle?: string;
-  commentId?: string;
-}): Promise<Lead> {
+export async function createLead(leadData: Omit<Lead, "id" | "createdAt" | "expiresAt" | "_id">): Promise<Lead> {
   const client = await clientPromise;
-  const db = client.db("myDatabase"); // change name if needed
+  const db = client.db("myDatabase"); // change to your DB name
   const leads = db.collection<Lead>("leads");
 
   // Check duplicate email
@@ -52,7 +46,9 @@ export async function getAllLeads(): Promise<Lead[]> {
   const client = await clientPromise;
   const db = client.db("myDatabase");
   const leads = db.collection<Lead>("leads");
-  return leads.find().toArray();
+
+  const data = await leads.find().toArray();
+  return data.map((l) => ({ ...l, id: l._id?.toString() }));
 }
 
 // Get leads by source
@@ -60,7 +56,9 @@ export async function getLeadsBySource(source: Lead["source"]): Promise<Lead[]> 
   const client = await clientPromise;
   const db = client.db("myDatabase");
   const leads = db.collection<Lead>("leads");
-  return leads.find({ source }).toArray();
+
+  const data = await leads.find({ source }).toArray();
+  return data.map((l) => ({ ...l, id: l._id?.toString() }));
 }
 
 // Get leads by post
@@ -68,7 +66,9 @@ export async function getLeadsByPost(postId: string): Promise<Lead[]> {
   const client = await clientPromise;
   const db = client.db("myDatabase");
   const leads = db.collection<Lead>("leads");
-  return leads.find({ postId }).toArray();
+
+  const data = await leads.find({ postId }).toArray();
+  return data.map((l) => ({ ...l, id: l._id?.toString() }));
 }
 
 // Delete lead
@@ -76,6 +76,7 @@ export async function deleteLead(id: string): Promise<boolean> {
   const client = await clientPromise;
   const db = client.db("myDatabase");
   const leads = db.collection<Lead>("leads");
-  const res = await leads.deleteOne({ _id: new (require("mongodb").ObjectId)(id) });
+
+  const res = await leads.deleteOne({ _id: new ObjectId(id) });
   return res.deletedCount === 1;
 }
